@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../viewModel/crypto_controller.dart';
+import 'crypto_detail_page.dart'; // Importa a nova página de detalhes
 
 class CryptoListPage extends StatelessWidget {
   CryptoListPage({Key? key}) : super(key: key);
 
   final cryptoController = Get.find<CryptoController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,40 +31,46 @@ class CryptoListPage extends StatelessWidget {
             itemCount: cryptoController.cryptos.length,
             itemBuilder: (context, index) {
               var crypto = cryptoController.cryptos[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Cor da sombra
-                        spreadRadius: 2, // Espalhamento da sombra
-                        blurRadius: 8, // Borrão da sombra
-                        offset: Offset(4, 4), // Deslocamento da sombra (x, y)
+              return GestureDetector(
+                onTap: () {
+                  // Navegação para a tela de detalhes passando a criptomoeda selecionada
+                  Get.to(() => CryptoDetailPage(crypto: crypto));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(4, 4),
+                        ),
+                      ],
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.80,
+                    height: 70,
+                    child: ListTile(
+                      leading: Image.network(
+                        crypto.image,
+                        width: 40,
+                        height: 40,
                       ),
-                    ],
-                  ),
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  height: 70,
-                  child: ListTile(
-                    leading: Image.network(
-                      crypto.image,
-                      width: 40,
-                      height: 40,
-                    ),
-                    title: Text(
-                      crypto.cryptoName,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    subtitle: Text(
-                      crypto.symbol.toUpperCase(),
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    trailing: Text(
-                      'R\$ ${crypto.price.toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 18),
+                      title: Text(
+                        crypto.cryptoName,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      subtitle: Text(
+                        crypto.symbol.toUpperCase(),
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      trailing: Text(
+                        'R\$ ${crypto.price.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                 ),
